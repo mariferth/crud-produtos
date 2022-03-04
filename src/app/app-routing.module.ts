@@ -6,9 +6,9 @@ import { ListaDeProdutosComponent } from './components/lista-de-produtos/lista-d
 
 const routes: Routes = [
   {path:'listaDeProdutos', component: ListaDeProdutosComponent},
-  {path:'listaDeProdutos/:nome/:preco', component: ListaDeProdutosComponent},
+  //{path:'listaDeProdutos/:nome/:preco', component: ListaDeProdutosComponent},
   {path:'criarProduto', component:CriarProdutoComponent},
-  {path:'editarProduto', component:EditarProdutoComponent},
+  {path:'editarProduto/:indice', component:EditarProdutoComponent},
   {path:'**', redirectTo:"/listaDeProdutos"},
   {path:'', redirectTo:"/listaDeProdutos", pathMatch:"full"}
 ];

@@ -7,7 +7,10 @@ import { Produto } from '../models/produto';
 export class ProdutosService {
   private produtos : Produto[] = [];
 
-  constructor() { }
+  constructor() {
+    this.inserirProduto(new Produto("Camiseta", 30));
+    this.inserirProduto(new Produto("Calça", 80));
+   }
 
   public inserirProduto(produto : Produto) : boolean {
     this.produtos.push(produto);
@@ -22,7 +25,7 @@ export class ProdutosService {
     return this.produtos[indice];
   }
 
-  public editaProduto(indice : number, produto : Produto) : boolean {
+  public editarProduto(indice : number, produto : Produto) : boolean {
     this.produtos[indice] = produto;
     /*
     this.produtos[indice].setNome(produto.getNome());

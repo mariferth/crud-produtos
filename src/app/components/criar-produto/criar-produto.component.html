@@ -1,7 +1,9 @@
 <h1>Criar Produto</h1>
 
-<label>Nome:</label>
-<input type="text" [(ngModel)]="nome"><br>
-<label>Preço:</label>
-<input type="number" [(ngModel)]="preco"><br>
-<button (click)="salvar()">Salvar</button>
+<form [formGroup] = "formCadastrar" (ngSubmit)= "submitForm()">
+    <label>Nome:</label>
+    <input type="text" formControlName="nome"><br>
+    <label>Preço:</label>
+    <input type="number" formControlName="preco"><br>
+    <button type="submit">Salvar</button>
+</form>

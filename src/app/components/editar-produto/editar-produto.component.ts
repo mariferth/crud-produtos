@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Produto } from 'src/app/models/produto';
+import { ProdutosService } from 'src/app/services/produtos.service';
 
 @Component({
   selector: 'app-editar-produto',
@@ -8,12 +11,22 @@ import { Component, OnInit } from '@angular/core';
 export class EditarProdutoComponent implements OnInit {
   public nome : string | undefined;
   public preco : number | undefined;
+  private indice : number = -1;
 
-  constructor() { }
+  constructor(private _router : Router, 
+    private _actRoute : ActivatedRoute,
+    private _produtoService : ProdutosService) { }
 
   ngOnInit(): void {
-    
-  
+    this._actRoute.params.subscribe((parametros) => {
+      //console.log(parametros["indice"]);
+      if (parametros["indice"]) {
+        this.indice = parametros["indice"];
+        let produto = this._produtoService.getProduto(this.indice);
+        this.nome = produto.getNome();
+        this.preco = produto.getPreco();
+      }
+    });
   }
 
   public salvar() {
@@ -25,6 +38,14 @@ export class EditarProdutoComponent implements OnInit {
     if(!this.preco) {
       alert("Preço é obrigatório!");
       return;
+    }
+    let produto = new Produto(this.nome, this.preco);
+    if(this._produtoService.editarProduto(this.indice, produto)){
+      alert("Produto editado com sucesso!");
+      this._router.navigate(["/listaDeProdutos"]);
+    }
+    else {
+      alert("Erro ao salvar produto!");
     }
 }
 /*
