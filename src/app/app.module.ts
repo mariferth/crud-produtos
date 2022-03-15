@@ -8,6 +8,12 @@ import { ListaDeProdutosComponent } from './components/lista-de-produtos/lista-d
 import { CriarProdutoComponent } from './components/criar-produto/criar-produto.component';
 import { EditarProdutoComponent } from './components/editar-produto/editar-produto.component';
 
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { environment } from 'src/environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,6 +26,11 @@ import { EditarProdutoComponent } from './components/editar-produto/editar-produ
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
+    AngularFireStorageModule,
+    AngularFireAuthModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]

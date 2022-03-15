@@ -1,12 +1,14 @@
 export class Produto {
-    private _nome : string;
-    private _preco : number;
+    id? : string;
+    nome : string;
+    preco : number;
 
     constructor(nome : string, preco : number) {
-        this._nome = nome;
-        this._preco = preco;
+        this.nome = nome;
+        this.preco = preco;
     }
 
+    /*
     public getNome() : string {
         return this._nome;
     }
@@ -21,5 +23,5 @@ export class Produto {
 
     public setPreco(preco : number) {
         this._preco = preco;
-    }
+    }*/
 }
