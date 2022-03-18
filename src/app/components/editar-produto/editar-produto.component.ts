@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Produto } from 'src/app/models/produto';
-import { ProdutosService } from 'src/app/services/produtos.service';
+import { ProdutoFirebaseService } from 'src/app/services/produto-firebase.service';
 
 @Component({
   selector: 'app-editar-produto',
@@ -13,11 +13,11 @@ export class EditarProdutoComponent implements OnInit {
   //public nome : string | undefined;
   //public preco : number | undefined;
   public formEditar : FormGroup;
-  private indice : number = -1;
+  private id ? : any;
 
   constructor(private _router : Router, 
     private _actRoute : ActivatedRoute,
-    private _produtoService : ProdutosService,
+    private _produtoService : ProdutoFirebaseService,
     private _formBuilder : FormBuilder) {
       this.formEditar = this._formBuilder.group({
         nome : ["", [Validators.required, Validators.minLength(5)]],
@@ -29,14 +29,18 @@ export class EditarProdutoComponent implements OnInit {
     this._actRoute.params.subscribe((parametros) => {
       //console.log(parametros["indice"]);
       if (parametros["indice"]) {
-        this.indice = parametros["indice"];
-        let produto = this._produtoService.getProduto(this.indice);
+        this.id = parametros["indice"];
+        this._produtoService.getProduto(parametros["indice"])
+        .subscribe(res => {
+          let produtosRef : any = res;
+          this.formEditar = this._formBuilder.group({
+            nome : [produtosRef.nome, [Validators.required, Validators.minLength(5)]],
+            preco : [produtosRef.preco, [Validators.required]]
+          });
+        })
         //this.nome = produto.getNome();
         //this.preco = produto.getPreco();
-        this.formEditar = this._formBuilder.group({
-          nome : [produto.getNome(), [Validators.required, Validators.minLength(5)]],
-          preco : [produto.getPreco(), [Validators.required]]
-        });
+        
       }
     });
   }
@@ -65,14 +69,14 @@ export class EditarProdutoComponent implements OnInit {
       alert("Preço é obrigatório!");
       return;
     }*/
-    let produto = new Produto(this.formEditar.controls["nome"].value, this.formEditar.controls["preco"].value);
-    if(this._produtoService.editarProduto(this.indice, produto)){
-      alert("Produto editado com sucesso!");
-      this._router.navigate(["/listaDeProdutos"]);
-    }
-    else {
-      alert("Erro ao salvar produto!");
-    }
+    //let produto = new Produto(this.formEditar.controls["nome"].value, this.formEditar.controls["preco"].value);
+    this._produtoService.editarProduto(this.formEditar.value, this.id)
+    .then(() => {alert("Produto editado com sucesso!")
+      this._router.navigate(["/listaDeProdutos"])
+    })
+    .catch((error) => {console.log(error)
+      alert("Erro ao salvar produto!")
+    })
 }
 /*
     if(this.indice == -1) {

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Produto } from 'src/app/models/produto';
-import { ProdutosService } from 'src/app/services/produtos.service';
+import { ProdutoFirebaseService } from 'src/app/services/produto-firebase.service';
+
 
 @Component({
   selector: 'app-lista-de-produtos',
@@ -13,7 +14,7 @@ export class ListaDeProdutosComponent implements OnInit {
   public lista_produtos : Produto[] = [];
 
   constructor(private _router : Router, 
-    private produtoService : ProdutosService) {
+    private produtoService : ProdutoFirebaseService) {
 
     }
     /*private _actRoute : ActivatedRoute) {
@@ -28,31 +29,37 @@ export class ListaDeProdutosComponent implements OnInit {
     }*/
 
   ngOnInit(): void {
-    this.lista_produtos = this.produtoService.getProdutos();
+    this.produtoService.getProdutos()
+    .subscribe(res => {
+      this.lista_produtos = res.map(e=>{
+        return {
+          id : e.payload.doc.id,
+          ...e.payload.doc.data() as Produto
+        } as Produto;
+      })
+    })
     /*let produto = new Produto("Camisa", 200);
     this.lista_produtos.push(produto);
     this.lista_produtos.push(new Produto("Camiseta", 50));
     this.lista_produtos.push(new Produto("Calça", 100));*/
   }
 
-  public excluir(indice : number) {
-    // Usando service
-    let resultado = confirm("Deseja excluir o produto " + this.produtoService.getProduto(indice).getNome() + "?");
+  public excluir(produto : Produto) {
+    // Usando service com firebase
+    let resultado = confirm("Deseja excluir o produto " + produto.nome + "?");
     if(resultado) {
-      if (this.produtoService.excluirProduto(indice)) {
-        alert("Produto excluído com sucesso!")
-      }
-      else {
-        alert("Erro ao excluir produto!")
-      }
+      this.produtoService.deletarProduto(produto)
+      .then(() => { alert("Produto excluído com sucesso!")})
+      .catch(() => { alert("Erro ao excluir produto!")})
+    
     }
     // Sem service
     /*this.lista_produtos.splice(index, 1);
     alert("Produto excluído com sucesso!")*/
   }
 
-  public editar(indice : number) : void {
-    this._router.navigate(["/editarProduto", indice]);
+  public editar(produto : Produto) : void {
+    this._router.navigate(["/editarProduto", produto.id]);
   }
 
   public irParaCriarProduto() {
