@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Produto } from 'src/app/models/produto';
 import { ProdutoFirebaseService } from 'src/app/services/produto-firebase.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 
 
 @Component({
@@ -14,6 +15,7 @@ export class ListaDeProdutosComponent implements OnInit {
   public lista_produtos : Produto[] = [];
 
   constructor(private _router : Router, 
+    private usuarioService : UsuarioService,
     private produtoService : ProdutoFirebaseService) {
 
     }
@@ -64,6 +66,19 @@ export class ListaDeProdutosComponent implements OnInit {
 
   public irParaCriarProduto() {
     this._router.navigate(["/criarProduto"]);
+  }
+
+  public logout() {
+    let resultado = confirm("Deseja realmente sair?");
+    if (resultado) {
+      this.usuarioService.logout()
+      .then(() => {
+        this._router.navigate(["/login"]);
+      })
+      .catch(() => {
+        alert("Erro ao sair da plataforma!");
+      })
+    } 
   }
 
 }
