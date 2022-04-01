@@ -7,9 +7,10 @@ import { GoogleAuthProvider } from 'firebase/auth';
 })
 export class UsuarioService {
   usuario : any;
-  autenticado? : boolean;
+  storage : Storage;
 
   constructor(private authService : AngularFireAuth) {
+    this.storage = window.localStorage;
     this.getUsuarioAutenticado();
   }
 
@@ -18,7 +19,7 @@ export class UsuarioService {
     .then((data) => {
       console.log(data);
       this.usuario = data;
-      this.autenticado = true;
+      this.storage.setItem("condicao", "autenticado");
     })
   }
 
@@ -39,6 +40,7 @@ export class UsuarioService {
   }
 
   logout(){
+    this.storage.setItem("condicao", "deslogado")
     return this.authService.signOut();
   }
 }

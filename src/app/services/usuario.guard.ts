@@ -15,7 +15,7 @@ export class UsuarioGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if(this.authService.autenticado) {
+    if(this.authService.storage.getItem("condicao") == "autenticado") {
       return true;
     } else {
       this.router.navigate(["/login"]);
