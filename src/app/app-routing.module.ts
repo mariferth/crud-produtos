@@ -5,14 +5,15 @@ import { CriarProdutoComponent } from './components/criar-produto/criar-produto.
 import { EditarProdutoComponent } from './components/editar-produto/editar-produto.component';
 import { ListaDeProdutosComponent } from './components/lista-de-produtos/lista-de-produtos.component';
 import { LoginComponent } from './components/login/login.component';
+import { UsuarioGuard } from './services/usuario.guard';
 
 const routes: Routes = [
   {path : 'login', component : LoginComponent},
   {path : 'cadastro', component : CadastroComponent},
-  {path:'listaDeProdutos', component: ListaDeProdutosComponent},
+  {path:'listaDeProdutos', component: ListaDeProdutosComponent, canActivate : [UsuarioGuard]},
   //{path:'listaDeProdutos/:nome/:preco', component: ListaDeProdutosComponent},
-  {path:'criarProduto', component:CriarProdutoComponent},
-  {path:'editarProduto/:indice', component:EditarProdutoComponent},
+  {path:'criarProduto', component:CriarProdutoComponent, canActivate : [UsuarioGuard]},
+  {path:'editarProduto/:indice', component:EditarProdutoComponent, canActivate : [UsuarioGuard]},
   {path:'**', redirectTo:"/login"},
   {path:'', redirectTo:"/login", pathMatch:"full"}
 ];

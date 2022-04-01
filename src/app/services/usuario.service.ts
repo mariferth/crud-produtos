@@ -6,8 +6,21 @@ import { GoogleAuthProvider } from 'firebase/auth';
   providedIn: 'root'
 })
 export class UsuarioService {
+  usuario : any;
+  autenticado? : boolean;
 
-  constructor(private authService : AngularFireAuth) { }
+  constructor(private authService : AngularFireAuth) {
+    this.getUsuarioAutenticado();
+  }
+
+  getUsuarioAutenticado() {
+    return this.authService.currentUser
+    .then((data) => {
+      console.log(data);
+      this.usuario = data;
+      this.autenticado = true;
+    })
+  }
 
   loginComEmailPassword(email : string, password : string) {
     return this.authService.signInWithEmailAndPassword(email, password);
