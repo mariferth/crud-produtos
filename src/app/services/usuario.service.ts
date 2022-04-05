@@ -11,20 +11,13 @@ export class UsuarioService {
 
   constructor(private authService : AngularFireAuth) {
     this.storage = window.localStorage;
-    this.getUsuarioAutenticado();
-  }
-
-  getUsuarioAutenticado() {
-    return this.authService.currentUser
-    .then((data) => {
-      console.log(data);
-      this.usuario = data;
-      this.storage.setItem("condicao", "autenticado");
-    })
   }
 
   loginComEmailPassword(email : string, password : string) {
-    return this.authService.signInWithEmailAndPassword(email, password);
+    return this.authService.signInWithEmailAndPassword(email, password)
+    .then((data) => {
+      this.storage.setItem("condicao", "autenticado");
+    });
   }
 
   cadastrarComEmailPassword(email : string, password : string){
@@ -32,7 +25,10 @@ export class UsuarioService {
   }
 
   loginComGoogleCount(){
-    return this.authLoginProvider(new GoogleAuthProvider());
+    return this.authLoginProvider(new GoogleAuthProvider())
+    .then((data) => {
+      this.storage.setItem("condicao", "autenticado");
+    });
   }
 
   authLoginProvider(provider : any){
